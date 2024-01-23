@@ -51,22 +51,35 @@ class CalculatorVM: ObservableObject {
             let operation = operationSelected(butt: butt)
             self.selectedOperation = operation
             if displayedValue.contains(".") {
-                firstDecimalNum = Double(displayedValue) ?? 0
+                firstDecimalNum = Double(displayedValue) ?? 0.0
             } else {
                 self.previousValue = Int(self.displayedValue) ?? 0
             }
             displayedValue = "0"
         case .equal:
             doTheOperation()
-            
         case .clear:
             self.displayedValue = "0"
         case .decimal:
             if !displayedValue.contains(".") {
                 displayedValue += "."
             }
-        case.negative,.percent:
-            break
+        case.negative:
+            if !displayedValue.contains("-") {
+                displayedValue.insert(contentsOf: "-", at: displayedValue.startIndex)
+            } else {
+                displayedValue.remove(at: displayedValue.startIndex)
+            }
+        case .percent:
+            if displayedValue.contains("."){
+                firstDecimalNum = Double(displayedValue) ?? 00
+                let result = firstDecimalNum / 100
+                displayedValue = String(result)
+            } else {
+                let firstNum = Double(displayedValue) ?? 0.0
+                let result = firstNum / 100
+                displayedValue = String(result)
+            }
         default:
             let number = butt.rawValue
             if self.displayedValue == "0"{
@@ -110,8 +123,7 @@ func operationSelected(butt: Calcbuttons) -> Operation {
     }
 }
 
-    func doTheOperation(){
-
+    func doTheOperation() {
         let storedValue = self.previousValue
         let storedDecimalValue = firstDecimalNum
         let currentValue = Int(self.displayedValue) ?? 0
@@ -154,8 +166,6 @@ func operationSelected(butt: Calcbuttons) -> Operation {
             break
         }
     }
-
-    
     func customWidth(butt: Calcbuttons) -> CGFloat{
         switch butt{
         case .zero:
@@ -164,6 +174,7 @@ func operationSelected(butt: Calcbuttons) -> Operation {
             return 85
         }
     }
+    
     func switchColorButton(butt: Calcbuttons) -> Color {
         switch butt {
         case .zero, .one, .two, .three, .four,.five,.six,.seven,.eight,.nine, .decimal:

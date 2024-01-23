@@ -10,7 +10,6 @@ import SwiftUI
 //repetitve code try and dumb it down to functions
 struct ContentView: View {
     @ObservedObject var vm = CalculatorVM()
-   
     var w = CGFloat(70)
     var body: some View {
         ZStack {
